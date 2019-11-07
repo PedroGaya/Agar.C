@@ -9,9 +9,11 @@
 #define STRUCTS_H_
 
 typedef struct object {
-	int id;
+	char id;
 	float x, y;
 	float dx, dy;
+	float size;
+	int render;
 }OBJ;
 
 #endif /* STRUCTS_H_ */
