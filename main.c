@@ -3,6 +3,7 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
+#include "structs.h"
 
 void must_init(bool test, const char *description)
 {
@@ -26,9 +27,9 @@ int main()
     must_init(queue, "queue");
 
 
-    al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
-    al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
-    al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
+    //al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
+    //al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
+    //al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
 
     ALLEGRO_DISPLAY* disp = al_create_display(1000, 600);
     must_init(disp, "display");
@@ -47,12 +48,8 @@ int main()
     bool redraw = true;
     ALLEGRO_EVENT event;
 
-    float x, y;
-    x = 500;
-    y = 300;
-    float dx, dy;
-    dx = 0;
-    dy = 0;
+    OBJ PlayerOBJ = {0, 500, 300, 0, 0};
+    OBJ *player = &PlayerOBJ;
 
     al_grab_mouse(disp);
 
@@ -65,7 +62,7 @@ int main()
 
 
     al_start_timer(timer);
-    al_set_mouse_xy(disp, x, y);
+    al_set_mouse_xy(disp, player->x, player->y);
     while(1)
     {
         al_wait_for_event(queue, &event);
@@ -76,32 +73,32 @@ int main()
                 if(key[ALLEGRO_KEY_ESCAPE])
                     done = true;
 
-                x += dx;
-                y += dy;
+                player->x += player->dx;
+                player->y += player->dy;
 
-                if(x < 0)
+                if(player->x < 0)
                 {
-                    x *= -1;
-                    dx *= -1;
+                    player->x *= -1;
+                    player->dx *= -1;
                 }
-                if(x > 1000)
+                if(player->x > 1000)
                 {
-                    x -= (x - 1000) * 2;
-                    dx *= -1;
+                    player->x -= (player->x - 1000) * 2;
+                    player->dx *= -1;
                 }
-                if(y < 0)
+                if(player->y < 0)
                 {
-                    y *= -1;
-                    dy *= -1;
+                    player->y *= -1;
+                    player->dy *= -1;
                 }
-                if(y > 600)
+                if(player->y > 600)
                 {
-                    y -= (y - 600) * 2;
-                    dy *= -1;
+                    player->y -= (player->y - 600) * 2;
+                    player->dy *= -1;
                 }
 
-                dx *= 0.95;
-                dy *= 0.95;
+                player->dx *= 0.95;
+                player->dy *= 0.95;
 
                 for(int i = 0; i < ALLEGRO_KEY_MAX; i++)
                     key[i] &= KEY_SEEN;
@@ -110,8 +107,8 @@ int main()
                 break;
 
             case ALLEGRO_EVENT_MOUSE_AXES:
-                dx += event.mouse.dx * 0.05;
-                dy += event.mouse.dy * 0.05;
+                player->dx += event.mouse.dx * 0.05;
+                player->dy += event.mouse.dy * 0.05;
                 break;
 
             case ALLEGRO_EVENT_KEY_DOWN:
@@ -132,8 +129,8 @@ int main()
         if(redraw && al_is_event_queue_empty(queue))
         {
             al_clear_to_color(al_map_rgb(255, 255, 255));
-            al_draw_textf(font, al_map_rgb(255, 255, 255), 0, 0, 0, "X: %.1f Y: %.1f", x, y);
-            al_draw_filled_circle(x, y, 30, al_map_rgb(0, 255, 255));
+            al_draw_textf(font, al_map_rgb(255, 255, 255), 0, 0, 0, "player->x: %.1f player->y: %.1f", (double)player->x, (double)player->y);
+            al_draw_filled_circle(player->x, player->y, 30, al_map_rgb(0, 255, 255));
 
             al_flip_display();
 
