@@ -55,7 +55,7 @@ int main()
 
 
     OBJ PlayerOBJ = {'P', 500, 300, 0, 0, 30, 1}; // Placeholder player_obj.
-    OBJ FoodOBJ1 = {'f', 800, 200, 0, 0, 15, 1};  // Placeholder food_objs.
+    OBJ FoodOBJ1 = {'f', 800, 200, 0, 0, 50, 1};  // Placeholder food_objs.
     OBJ FoodOBJ2 = {'f', 900, 400, 0, 0, 15, 1};
     OBJ FoodOBJ3 = {'f', 300, 500, 0, 0, 15, 1};
     OBJ FoodOBJ4 = {'f', 100, 400, 0, 0, 15, 1};
@@ -123,9 +123,9 @@ int main()
                 // Collision check
                 for (int i = 0; i < 100; i++) {
                 	for (int j = 0; j < 100; j++) {
-                		if (loaded[i].id != 'f' &&
+                		if (loaded[i].size > loaded[j].size &&
                 			loaded[i].render == 1 &&
-							loaded[j].render ==1 &&
+							loaded[j].render == 1 &&
 							abs(loaded[i].x - loaded[j].x) < loaded[i].size &&
 							abs(loaded[i].y - loaded[j].y) < loaded[i].size &&
 							i != j)
@@ -170,8 +170,9 @@ int main()
             		if (loaded[i].render)
             			al_draw_filled_circle(loaded[i].x, loaded[i].y, loaded[i].size, al_map_rgb(255, 0, 0));
             		break;
-            	default:
-            		al_draw_filled_circle(loaded[0].x, loaded[0].y, loaded[0].size, al_map_rgb(0, 255, 255));
+            	case ('P'):
+            		if (loaded[i].render)
+            			al_draw_filled_circle(loaded[i].x, loaded[i].y, loaded[i].size, al_map_rgb(0, 255, 255));
             	}
             }
 
