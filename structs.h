@@ -9,11 +9,12 @@
 #define STRUCTS_H_
 
 typedef struct object {
-	char id;
-	float x, y;
-	float dx, dy;
+	char id; // Identifier for object type
+	float x, y; // These represent world coordinates
+	float dx, dy; // Velocity
 	float size;
-	int render;
+	int render; // Flag for render
+	int score;
 }OBJ;
 
 #endif /* STRUCTS_H_ */

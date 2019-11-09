@@ -54,18 +54,20 @@ int main()
     OBJ loaded[100] = {}; // Array with all loaded objs.
 
 
-    OBJ PlayerOBJ = {'P', 500, 300, 0, 0, 30, 1}; // Placeholder player_obj.
-    OBJ FoodOBJ1 = {'f', 800, 200, 0, 0, 50, 1};  // Placeholder food_objs.
-    OBJ FoodOBJ2 = {'f', 900, 400, 0, 0, 15, 1};
-    OBJ FoodOBJ3 = {'f', 300, 500, 0, 0, 15, 1};
-    OBJ FoodOBJ4 = {'f', 100, 400, 0, 0, 15, 1};
+    OBJ PlayerOBJ = {'P', 500, 300, 0, 0, 30, 1, 0}; // Placeholder player_obj.
+    OBJ CameraOBJ = {'C', 0, 0, 0, 0, 0, 0 ,0}; // Placeholder camera_obj.
+    OBJ FoodOBJ1 = {'f', 800, 200, 0, 0, 50, 1, 0};  // Placeholder food_objs.
+    OBJ FoodOBJ2 = {'f', 900, 400, 0, 0, 20, 1, 0};
+    OBJ FoodOBJ3 = {'f', 300, 500, 0, 0, 25, 1, 0};
+    OBJ FoodOBJ4 = {'f', 100, 400, 0, 0, 15, 1, 0};
 
     // Adding objs to be loaded to loaded_Array.
     loaded[0] = PlayerOBJ;
-    loaded[1] = FoodOBJ1;
-    loaded[2] = FoodOBJ2;
-    loaded[3] = FoodOBJ3;
-    loaded[4] = FoodOBJ4;
+    loaded[1] = CameraOBJ;
+    loaded[2] = FoodOBJ1;
+    loaded[3] = FoodOBJ2;
+    loaded[4] = FoodOBJ3;
+    loaded[5] = FoodOBJ4;
 
 
     #define KEY_SEEN     1
@@ -117,6 +119,7 @@ int main()
                 loaded[0].dx *= 0.95;
                 loaded[0].dy *= 0.95;
 
+                // Stores what keys were pressed
                 for(int i = 0; i < ALLEGRO_KEY_MAX; i++)
                     key[i] &= KEY_SEEN;
 
@@ -132,6 +135,7 @@ int main()
                 		{
                 				loaded[j].render = 0;
                 				loaded[i].size += 3;
+                				loaded[i].score += loaded[j].size * 10;
                 		}
                 	}
                 }
@@ -159,21 +163,25 @@ int main()
         if(done)
             break;
 
+
+        // Drawing function.
         if(redraw && al_is_event_queue_empty(queue))
         {
             al_clear_to_color(al_map_rgb(255, 255, 255));
-            al_draw_textf(font, al_map_rgb(0, 0, 0), 0, 0, 0, "loaded[0]->x: %.1f loaded[0]->y: %.1f", (double)loaded[0].x, (double)loaded[0].y);
+            al_draw_textf(font, al_map_rgb(0, 0, 0), 10, 0, 0, "Score: %d", loaded[0].score);
 
-            for (int i = 0; i < 100; i++) { // Draws objects depending on their ID.
-            	switch(loaded[i].id) {
-            	case ('f'):
-            		if (loaded[i].render)
-            			al_draw_filled_circle(loaded[i].x, loaded[i].y, loaded[i].size, al_map_rgb(255, 0, 0));
-            		break;
-            	case ('P'):
-            		if (loaded[i].render)
-            			al_draw_filled_circle(loaded[i].x, loaded[i].y, loaded[i].size, al_map_rgb(0, 255, 255));
-            	}
+            for (int i = 0; i < 100; i++) { // Draws objects depending on their ID and position.
+					switch(loaded[i].id) {
+						case ('P'):
+							if (loaded[i].render)
+								al_draw_filled_circle(loaded[i].x, loaded[i].y, loaded[i].size, al_map_rgb(0, 255, 255));
+							break;
+						case ('f'):
+							if (loaded[i].render)
+								al_draw_filled_circle(loaded[i].x, loaded[i].y, loaded[i].size, al_map_rgb(255, 0, 0));
+							break;
+					}
+
             }
 
             al_flip_display();
