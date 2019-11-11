@@ -14,7 +14,7 @@ typedef struct object {
 	float dx, dy; // Velocity
 	float size;
 	int render; // Flag for render
-	int score;
+	int score; // Score
 }OBJ;
 
 #endif /* STRUCTS_H_ */

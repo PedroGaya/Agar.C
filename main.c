@@ -6,6 +6,11 @@
 #include "structs.h"
 #include <math.h>
 
+float sigmoid(float x) {
+
+	return x / (1 + abs(x));
+}
+
 void must_init(bool test, const char *description)
 {
     if(test) return;
@@ -89,33 +94,37 @@ int main()
                 if(key[ALLEGRO_KEY_ESCAPE])
                     done = true;
 
-                // Speed increment
+                // Speed increment for camera
+                                loaded[1].x = loaded[0].x - 500;
+                                loaded[1].y = loaded[0].y - 300;
+
+                // Speed increment for player
                 loaded[0].x += loaded[0].dx;
                 loaded[0].y += loaded[0].dy;
 
                 // Border Check
                 if(loaded[0].x < 0)
                 {
-                    loaded[0].x *= -1;
-                    loaded[0].dx *= -1;
+                    loaded[0].x = 0;
+                    //loaded[0].dx *= -1;
                 }
-                if(loaded[0].x > 1000)
+                if(loaded[0].x > 10000)
                 {
-                    loaded[0].x -= (loaded[0].x - 1000) * 2;
-                    loaded[0].dx *= -1;
+                    loaded[0].x = 10000;
+                    //loaded[0].dx *= -1;
                 }
                 if(loaded[0].y < 0)
                 {
-                    loaded[0].y *= -1;
-                    loaded[0].dy *= -1;
+                    loaded[0].y = 0;
+                    //loaded[0].dy *= -1;
                 }
-                if(loaded[0].y > 600)
+                if(loaded[0].y > 10000)
                 {
-                    loaded[0].y -= (loaded[0].y - 600) * 2;
-                    loaded[0].dy *= -1;
+                    loaded[0].y = 10000;
+                    //loaded[0].dy *= -1;
                 }
 
-                // Desacceleration
+                // Player desacceleration
                 loaded[0].dx *= 0.95;
                 loaded[0].dy *= 0.95;
 
@@ -126,7 +135,9 @@ int main()
                 // Collision check
                 for (int i = 0; i < 100; i++) {
                 	for (int j = 0; j < 100; j++) {
-                		if (loaded[i].size > loaded[j].size &&
+                		if (i != 1 &&
+    						j != 1 &&
+                			loaded[i].size > loaded[j].size &&
                 			loaded[i].render == 1 &&
 							loaded[j].render == 1 &&
 							abs(loaded[i].x - loaded[j].x) < loaded[i].size &&
@@ -144,8 +155,8 @@ int main()
                 break;
 
             case ALLEGRO_EVENT_MOUSE_AXES: // Defines mouse movement for player.
-                loaded[0].dx += event.mouse.dx * 0.05;
-                loaded[0].dy += event.mouse.dy * 0.05;
+            	loaded[0].dx += (int)(event.mouse.x - (loaded[0].x - loaded[1].x)) * 0.005;
+            	loaded[0].dy += (int)(event.mouse.y - (loaded[0].y - loaded[1].y)) * 0.005;
                 break;
 
             case ALLEGRO_EVENT_KEY_DOWN:
@@ -158,7 +169,11 @@ int main()
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 done = true;
                 break;
+
+
         }
+
+
 
         if(done)
             break;
@@ -174,13 +189,14 @@ int main()
 					switch(loaded[i].id) {
 						case ('P'):
 							if (loaded[i].render)
-								al_draw_filled_circle(loaded[i].x, loaded[i].y, loaded[i].size, al_map_rgb(0, 255, 255));
+								al_draw_filled_circle(loaded[i].x - loaded[1].x, loaded[i].y - loaded[1].y, loaded[i].size, al_map_rgb(0, 255, 255));
 							break;
 						case ('f'):
 							if (loaded[i].render)
-								al_draw_filled_circle(loaded[i].x, loaded[i].y, loaded[i].size, al_map_rgb(255, 0, 0));
+								al_draw_filled_circle(loaded[i].x - loaded[1].x, loaded[i].y - loaded[1].y, loaded[i].size, al_map_rgb(255, 0, 0));
 							break;
-					}
+
+            	}
 
             }
 
