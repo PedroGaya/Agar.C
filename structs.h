@@ -7,6 +7,7 @@
 
 #ifndef STRUCTS_H_
 #define STRUCTS_H_
+#define MAX_LOADED 100
 
 typedef struct object {
 	char id; // Identifier for object type
@@ -15,6 +16,8 @@ typedef struct object {
 	float size;
 	int render; // Flag for render
 	int score; // Score
-}OBJ;
+} OBJ;
+
+OBJ loaded[MAX_LOADED];
 
 #endif /* STRUCTS_H_ */
